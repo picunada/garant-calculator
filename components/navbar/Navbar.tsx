@@ -3,6 +3,7 @@
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { MoonStar } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import { Label } from '../ui/label'
 import { Switch } from '../ui/switch'
 
@@ -26,4 +27,6 @@ function Navbar() {
   )
 }
 
-export default Navbar
+export default dynamic(() => Promise.resolve(Navbar), {
+  ssr: false,
+})
