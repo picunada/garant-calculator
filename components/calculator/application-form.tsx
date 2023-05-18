@@ -96,7 +96,7 @@ export const ApplicationForm: FC<ApplicationFormProps> = ({
       </SheetTrigger>
       <SheetContent className='rounded-t-3xl md:rounded-none md:w-1/2 lg:w-1/3 pt-10'
         position={windowSize.innerWidth >= 768 ? 'right' : 'bottom'}
-        size={windowSize.innerWidth >= 768 ? 'default' : 'lg'}>
+        size={windowSize.innerWidth >= 768 ? 'default' : 'xl'}>
         <SheetHeader>
           <SheetTitle>Оформить гарантию со скидкой</SheetTitle>
           <SheetDescription>
