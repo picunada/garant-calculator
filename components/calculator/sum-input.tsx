@@ -42,12 +42,12 @@ const SumInput: React.FC<SumInputProps> = ({
     format()
   }
 
-  useEffect(() => setter(sum), [sum])
+  useEffect(() => setter(sum), [sum, setter])
 
   return (
     <div className='relative flex w-full'>
-      <Input ref={sumRef as Ref<HTMLInputElement>} onChange={onInputChange} value={sum} className='appearance-none m-0 pl-7' placeholder='Укажите сумму' />
-      <RussianRuble className='absolute top-2 left-1 w-5 text-neutral-400 ' />
+      <Input ref={sumRef as Ref<HTMLInputElement>} onChange={onInputChange} value={sum} className='appearance-none m-0 pl-[3.25rem]' placeholder='Укажите сумму' />
+      <RussianRuble className='absolute top-2 left-4 w-5 text-neutral-400 ' />
     </div>
   )
 }

@@ -65,10 +65,9 @@ const CalculatorDatePicker: React.FC<CalculatorDatePickerProps> = ({
 
   React.useEffect(() => {
     let val = periodString!
-    val = periodString.replace(' ', '')
 
     setter(val)
-  }, [periodString])
+  }, [periodString, setter])
 
   return (
     <Popover>

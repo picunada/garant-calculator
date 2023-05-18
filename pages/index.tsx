@@ -3,6 +3,7 @@ import Heading from '@/components/ui/heading'
 import Subheading from '@/components/ui/subheading'
 
 export default function Home() {
+
   return (
     <div className='flex flex-col gap-10 items-center'>
       <div className='flex flex-col'>
@@ -14,6 +15,7 @@ export default function Home() {
         </Subheading>
       </div>
       <Calculator />
+
     </div>
   )
 }

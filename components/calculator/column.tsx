@@ -6,6 +6,9 @@ import { Button } from '../ui/button'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
 import { Skeleton } from '../ui/skeleton'
 import type { BankResponse } from '@/lib/bank'
+import { ApplicationForm } from './application-form'
+import { useContext } from 'react'
+import { CalculatorContext } from '../providers/calculator-provider'
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -17,7 +20,7 @@ export const agentColumns: ColumnDef<BankResponse>[] = [
     cell: ({ row }) => {
       return (
         <div >
-          <h1>{row.original.name}</h1>
+          <h1 className='text-xs md:text-base'>{row.original.name}</h1>
           <h3 className='text-muted-foreground text-xs'>{row.original.rating}</h3>
         </div>
       )
@@ -50,7 +53,7 @@ export const agentColumns: ColumnDef<BankResponse>[] = [
     cell: ({ row }) => {
       return (
         <div>
-          <h1>{row.original.price}</h1>
+          <h1 className='text-xs md:text-base'>{row.original.price}</h1>
           <h3 className='text-muted-foreground text-xs'>{row.original.discount_price_percent}</h3>
         </div>
       )
@@ -84,7 +87,7 @@ export const agentColumns: ColumnDef<BankResponse>[] = [
       return (
         <div>
           <h3 className='text-destructive/75 text-xs'>{`-${row.original.discount}`}</h3>
-          <h1>{row.original.pro_price}</h1>
+          <h1 className='text-xs md:text-base'>{row.original.pro_price}</h1>
           <h3 className='text-muted-foreground text-xs'>{row.original.pro_price_percent}</h3>
         </div>
       )
@@ -99,7 +102,7 @@ export const dealerColumns: ColumnDef<BankResponse>[] = [
     cell: ({ row }) => {
       return (
         <div >
-          <h1>{row.original.name}</h1>
+          <h1 className='text-xs md:text-base'>{row.original.name}</h1>
           <h3 className='text-muted-foreground text-xs'>{row.original.rating}</h3>
         </div>
       )
@@ -132,7 +135,7 @@ export const dealerColumns: ColumnDef<BankResponse>[] = [
     cell: ({ row }) => {
       return (
         <div>
-          <h1>{row.original.price}</h1>
+          <h1 className='text-xs md:text-base'>{row.original.price}</h1>
           <h3 className='text-muted-foreground text-xs'>{row.original.discount_price_percent}</h3>
         </div>
       )
@@ -141,7 +144,13 @@ export const dealerColumns: ColumnDef<BankResponse>[] = [
   {
     header: ' ',
     cell: ({ row }) => {
-      return <Button className='w-full h-[3.25rem]'>Получить cкидку %</Button>
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [law, option, period, advance, sum] = useContext(CalculatorContext)
+      return (
+        row.original.price === '-' ?
+          <div className='flex items-center'>{row.original.price}</div> :
+          <ApplicationForm bank={row.original} advance={advance ? 'да' : 'нет'} law={law} period={period} sum={sum} type={option} />
+      )
     },
   },
 ]
@@ -150,11 +159,11 @@ export const loadingColumns: ColumnDef<BankResponse>[] = [
   {
     accessorKey: '0',
     header: () => <div className='text-muted-foreground text-sm'>Банк</div>,
-    cell: ({ row }) => {
+    cell: () => {
       return (
         <div className='flex flex-col gap-2'>
-          <Skeleton className="h-3.5 w-[150px]" />
-          <Skeleton className="h-2.5 w-[100px]" />
+          <Skeleton className="h-3.5 w-[80px] sm:w-[150px]" />
+          <Skeleton className="h-2.5 w-[50px] sm:w-[100px]" />
         </div>
       )
     },
@@ -186,8 +195,8 @@ export const loadingColumns: ColumnDef<BankResponse>[] = [
     cell: () => {
       return (
         <div className='flex flex-col gap-2'>
-          <Skeleton className="h-3.5 w-[150px]" />
-          <Skeleton className="h-2.5 w-[100px]" />
+          <Skeleton className="h-3.5 w-[80px] sm:w-[150px]" />
+          <Skeleton className="h-2.5 w-[50px] sm:w-[100px]" />
         </div>
       )
     },
@@ -220,8 +229,8 @@ export const loadingColumns: ColumnDef<BankResponse>[] = [
       return (
         <div className='flex flex-col gap-2'>
           <Skeleton className="h-2.5 w-[30px]" />
-          <Skeleton className="h-3.5 w-[150px]" />
-          <Skeleton className="h-3 w-[100px]" />
+          <Skeleton className="h-3.5 w-[80px] sm:w-[150px]" />
+          <Skeleton className="h-3 w-[50px] sm:w-[100px]" />
         </div>
       )
     },

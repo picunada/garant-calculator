@@ -33,7 +33,7 @@ function BankResponseList(props: BankResponseListProps) {
         <TabsContent value="agent">
           <Card>
             <CardHeader>
-              <CardTitle>Поставщики</CardTitle>
+              <CardTitle>Агенты</CardTitle>
               <CardDescription>Описание</CardDescription>
             </CardHeader>
             <CardContent>

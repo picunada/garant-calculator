@@ -51,18 +51,18 @@ export const LawCombobox: React.FC<LawProps> = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full md:w-1/3 justify-between"
         >
           {value
             ? laws.find(law => law.value === value)?.label
-            : 'Select law...'}
+            : 'Выберете закон...'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search law..." />
-          <CommandEmpty>No law found.</CommandEmpty>
+          <CommandInput placeholder="Искать закон..." />
+          <CommandEmpty>Закон не найден.</CommandEmpty>
           <CommandGroup>
             {laws.map(law => (
               <CommandItem

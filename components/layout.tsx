@@ -1,6 +1,7 @@
 import { Montserrat } from 'next/font/google'
 import type { ReactNode } from 'react'
 import Navbar from '@/components/navbar/Navbar'
+import { Toaster } from './ui/toaster'
 
 interface LayoutProps {
   children: ReactNode
@@ -25,14 +26,14 @@ const Layout: React.FC<LayoutProps> = ({
       }`}</style>
       <div className='h-screen flex flex-col items-center'>
         <div className='max-w-[1200px]'>
+          <Toaster />
           <Navbar />
-          <main className={`flex flex-1 flex-col justify-between p-10 ${inter.className}`}>
+          <main className={`flex flex-1 flex-col justify-between p-3 md:p-10 ${inter.className}`}>
             {children}
           </main>
         </div>
 
       </div>
-
     </>
   )
 }

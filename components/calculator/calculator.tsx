@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { createContext, useCallback, useState } from 'react'
 import axios from 'axios'
 import useSWRMutation from 'swr/mutation'
 import { Switch } from '../ui/switch'
@@ -10,6 +10,7 @@ import CalculatorDatePicker from './calculator-datepicker'
 import BankResponseList from './bank-response'
 import { Button } from '@/components/ui/button'
 import type { BankResponse } from '@/lib/bank'
+import CalculatorProvider from '../providers/calculator-provider'
 
 function Calculator() {
   const [law, setLaw] = useState('')
@@ -17,8 +18,6 @@ function Calculator() {
   const [period, setPeriod] = useState('')
   const [advance, setAdvance] = useState(false)
   const [sum, setSum] = useState('')
-
-  const [response, setResponse] = useState<any>()
 
   const fetchBankResponse = useCallback(async (url: string, { arg }: {
     arg: {
@@ -37,48 +36,49 @@ function Calculator() {
         'Content-Type': 'application/json',
       },
     })
-    console.log(response.data)
     return response.data
   }, [])
 
   const {
     data: banks,
-    error,
     trigger,
-    reset,
     isMutating,
   } = useSWRMutation('https://calc.progarantii.ru/v4', fetchBankResponse)
 
   return (
     <>
       <div className="max-w-[1200px] w-full flex flex-col rounded-2xl border border-border p-4 gap-4">
-        <div className='flex flex-row gap-3 items-center justify-between'>
+        <div className='flex flex-col md:flex-row gap-3 items-center justify-between'>
           <LawCombobox setter={setLaw} />
 
-          <OptionInput setter={setOption} law={law} />
+          <div className='flex flex-row gap-3 items-center'>
+            <OptionInput setter={setOption} law={law} />
 
-          { }
-          <div className={`flex items-center space-x-2 ${!['i', 'g'].includes(option) && 'invisible'}`}>
-            <Switch checked={advance} onCheckedChange={(value: boolean) => setAdvance(value)} id="advance" />
-            <Label htmlFor="advance">Аванс</Label>
+            <div className={`flex items-center justify-start  space-x-2 ${!['i', 'g'].includes(option) && 'invisible'}`}>
+              <Switch checked={advance} onCheckedChange={(value: boolean) => setAdvance(value)} id="advance" />
+              <Label htmlFor="advance">Аванс</Label>
+            </div>
           </div>
         </div>
-        <div className='flex flex-row gap-3 items-center'>
+        <div className='flex flex-col md:flex-row gap-3 items-center'>
           <SumInput setter={setSum} />
           <CalculatorDatePicker setter={setPeriod} />
           <Button onClick={() => trigger({
-            k: 'ahr4oi2aez0F1262516oagah4Kooso',
+            k: process.env.NEXT_PUBLIC_API_KEY as string,
             s: `${sum.replace(/\D/g, '')}руб`,
-            d: period,
+            d: period.replace(' ', ''),
             t: law,
             a: advance ? 'y' : 'n',
             m: option,
-          })} className='w-35'>
+          })} className='w-full'>
             Рассчитать
           </Button>
         </div>
       </div >
-      <BankResponseList banks={banks} isLoading={isMutating} />
+      <CalculatorProvider value={[law, option, period, advance, sum]}>
+        <BankResponseList banks={banks} isLoading={isMutating} />
+      </CalculatorProvider>
+
     </>
 
   )

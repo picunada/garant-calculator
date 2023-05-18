@@ -3,7 +3,7 @@ import React from 'react'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Label } from '../ui/label'
 
-const options = [
+export const options = [
   {
     law: '44',
     options: [
@@ -44,8 +44,8 @@ const OptionInput: React.FC<OptionInputProps> = ({
         {options.find(value => value.law === law)?.options.map((option, index) => {
           return (
             <div key={index} className="flex items-center gap-2 whitespace-nowrap first-letter:uppercase text-neutral-400">
-              <RadioGroupItem value={option.value} id={index} />
-              <Label htmlFor={index}>{option.name}</Label>
+              <RadioGroupItem value={option.value} id={`${index}`} />
+              <Label className='whitespace-normal' htmlFor={`${index}`}>{option.name}</Label>
             </div>
           )
         })}
