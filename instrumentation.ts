@@ -7,4 +7,5 @@ export async function register() {
 
 
   console.log('register')
+  console.log(process.env.MQ_URI)
 }

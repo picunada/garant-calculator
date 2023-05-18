@@ -44,7 +44,7 @@ export const ApplicationForm: FC<ApplicationFormProps> = ({
     };
   }, []);
 
-  const sendRequest = () => {
+  const sendRequest = async () => {
     if (!email || !inn || !purchaseNumber)
       return toast({
         title: 'Ошибка',
@@ -65,18 +65,28 @@ export const ApplicationForm: FC<ApplicationFormProps> = ({
       type: options.find((pur) => pur.law = law)?.options.find((opt) => opt.value === type)?.name as string
     }
 
-    fetch('/api/application', {
+    await fetch('/api/application', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(application)
+    }).then((res) => {
+      if (res.status === 200) {
+        return toast({
+          title: 'Успешно',
+          description: 'Заявка успешно отправленна'
+        })
+      } else {
+        return toast({
+          title: 'Ошибка',
+          description: 'Ошибка запроса на сервер',
+          variant: "destructive"
+        })
+      }
     })
 
-    toast({
-      title: 'Успешно',
-      description: 'Заявка успешно отправленна'
-    })
+
   }
 
   return (

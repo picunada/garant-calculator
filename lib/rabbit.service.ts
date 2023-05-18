@@ -10,11 +10,12 @@ export class RabbitMQService {
 
   constructor() {
     this.setupSerivce()
-    console.log('initialized')
+
   }
 
   private async setupSerivce() {
     this.connection = await amqp.connect(process.env.MQ_URI as string)
+    console.log('connected')
     this.channel = await this.connection.createChannel()
 
     await this.channel.assertQueue(this.queueName, {
