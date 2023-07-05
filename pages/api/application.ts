@@ -17,15 +17,17 @@ export default async function handler(req: ApplicationRequest, res: NextApiRespo
     to: req.body.email,
     subject: `Заказ на гарантию по ФЗ-${req.body.law} от ${req.body.inn}`,
     body: `
+    - Имя: ${req.body.name}
+    ${req.body.phone ? '' : ' { - Номер телефона: ${ req.body.phone }'}
     — Дата: ${new Date().toLocaleString('en-RU', { timeZone: 'UTC' })}
     — ФЗ ${req.body.law}
     — Тип гарантии ${req.body.type}
     — Cумма ${req.body.sum + ' руб'}
-    — Кол-во дней ${req.body.period}
+    — Кол - во дней ${req.body.period}
     — Аванс ${req.body.advance}
     — Банк ${req.body.bank}
     — Cтоимость ${req.body.bank_sum}
-    `
+  `
   }
 
   // Send to MQ

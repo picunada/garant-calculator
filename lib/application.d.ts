@@ -1,5 +1,7 @@
 export interface Application {
   email: string
+  name: string
+  phone: string
   inn: string
   purchaseNumber: string
   law: string

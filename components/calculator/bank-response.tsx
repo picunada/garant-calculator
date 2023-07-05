@@ -14,10 +14,6 @@ function BankResponseList(props: BankResponseListProps) {
   return (
     <div className='max-w-[1200px] w-full'>
       <Tabs defaultValue="dealer" >
-        <TabsList>
-          <TabsTrigger value="dealer">Поставщик</TabsTrigger>
-          <TabsTrigger value="agent">Агент</TabsTrigger>
-        </TabsList>
         <TabsContent value="dealer">
           <Card>
             <CardHeader>
@@ -29,17 +25,6 @@ function BankResponseList(props: BankResponseListProps) {
             </CardContent>
           </Card>
 
-        </TabsContent>
-        <TabsContent value="agent">
-          <Card>
-            <CardHeader>
-              <CardTitle>Агенты</CardTitle>
-              <CardDescription>Описание</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {props.isLoading ? <DataTable columns={loadingColumns} data={[...Array(5)]} /> : (props.banks && <DataTable columns={agentColumns} data={props.banks} />)}
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs >
     </div >

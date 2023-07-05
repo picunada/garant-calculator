@@ -1,4 +1,5 @@
-import { createContext, useCallback, useState } from 'react'
+import { createContext, useCallback, useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import axios from 'axios'
 import useSWRMutation from 'swr/mutation'
 import { Switch } from '../ui/switch'
@@ -13,6 +14,8 @@ import type { BankResponse } from '@/lib/bank'
 import CalculatorProvider from '../providers/calculator-provider'
 
 function Calculator() {
+  const searchParams = useSearchParams()
+
   const [law, setLaw] = useState('')
   const [option, setOption] = useState('')
   const [period, setPeriod] = useState('')
@@ -45,24 +48,46 @@ function Calculator() {
     isMutating,
   } = useSWRMutation('https://calc.progarantii.ru/v4', fetchBankResponse)
 
+  useEffect(() => {
+    if (searchParams.has('law')) {
+      console.log(searchParams.get('law'))
+      setLaw(searchParams.get('law') as string)
+    }
+
+
+    if (searchParams.has('days'))
+      setPeriod(searchParams.get('days') as string)
+
+    if (searchParams.has('type'))
+      setOption(searchParams.get('type') as string)
+
+    if (searchParams.has('sum'))
+      setSum(searchParams.get('sum') as string)
+
+    if (searchParams.has('advance'))
+      setAdvance(searchParams.get('advance') === 'true' ? true : false)
+
+  }, [searchParams])
+
   return (
     <>
       <div className="max-w-[1200px] w-full flex flex-col rounded-2xl border border-border p-4 gap-4">
         <div className='flex flex-col md:flex-row gap-3 items-center justify-between'>
-          <LawCombobox setter={setLaw} />
+          <LawCombobox setter={setLaw} value={law} />
 
+          <SumInput setter={setSum} value={sum} />
+          <CalculatorDatePicker setter={setPeriod} value={period} />
+        </div>
+        <div className='flex justify-between md:flex-row gap-3 items-center'>
           <div className='flex flex-row gap-3 items-center'>
-            <OptionInput setter={setOption} law={law} />
+            <OptionInput setter={setOption} value={option} law={law} />
 
             <div className={`flex items-center justify-start  space-x-2 ${!['i', 'g'].includes(option) && 'invisible'}`}>
               <Switch checked={advance} onCheckedChange={(value: boolean) => setAdvance(value)} id="advance" />
               <Label htmlFor="advance">Аванс</Label>
             </div>
           </div>
-        </div>
-        <div className='flex flex-col md:flex-row gap-3 items-center'>
-          <SumInput setter={setSum} />
-          <CalculatorDatePicker setter={setPeriod} />
+
           <Button onClick={() => trigger({
             k: process.env.NEXT_PUBLIC_API_KEY as string,
             s: `${sum.replace(/\D/g, '')}руб`,
@@ -70,7 +95,7 @@ function Calculator() {
             t: law,
             a: advance ? 'y' : 'n',
             m: option,
-          })} className='w-full'>
+          })}>
             Рассчитать
           </Button>
         </div>

@@ -17,13 +17,14 @@ import {
 
 interface CalculatorDatePickerProps {
   setter: React.Dispatch<React.SetStateAction<string>>
+  value: string
 }
 
 const CalculatorDatePicker: React.FC<CalculatorDatePickerProps> = ({
   setter,
+  value
 }) => {
   const [date, setDate] = React.useState<Date>(new Date())
-  const [periodString, setPeriodString] = React.useState<string>('')
   const inputRef = React.useRef<HTMLInputElement>()
 
   const setDateAndPeriod: SelectSingleEventHandler = (day, selected) => {
@@ -32,13 +33,13 @@ const CalculatorDatePicker: React.FC<CalculatorDatePickerProps> = ({
     const val = `${Math.ceil(days)}`
     const func = async () => {
       if (val === '0')
-        setPeriodString('')
+        setter('')
       const lastDigit = parseInt(val ?? '0') % 10
       if (lastDigit === 1)
-        setPeriodString(`${val} день`)
+        setter(`${val} день`)
       else if (lastDigit > 1 && lastDigit < 5 && (parseInt(val!) > 20 || parseInt(val!) < 5))
-        setPeriodString(`${val} дня`)
-      else setPeriodString(`${val} дней`)
+        setter(`${val} дня`)
+      else setter(`${val} дней`)
     }
     func()
   }
@@ -50,24 +51,18 @@ const CalculatorDatePicker: React.FC<CalculatorDatePickerProps> = ({
     val = val.replace(/\D/g, '')
     const func = async () => {
       if (val.length === 0)
-        setPeriodString('')
+        setter('')
 
       const lastDigit = parseInt(val ?? '0') % 10
 
       if (lastDigit === 1)
-        setPeriodString(`${val} день`)
+        setter(`${val} день`)
       else if (lastDigit > 1 && lastDigit < 5 && (parseInt(val!) > 20 || parseInt(val!) < 5))
-        setPeriodString(`${val} дня`)
-      else setPeriodString(`${val} дней`)
+        setter(`${val} дня`)
+      else setter(`${val} дней`)
     }
     func().then(() => e.target.setSelectionRange(start, end))
   }
-
-  React.useEffect(() => {
-    let val = periodString!
-
-    setter(val)
-  }, [periodString, setter])
 
   return (
     <Popover>
@@ -79,7 +74,7 @@ const CalculatorDatePicker: React.FC<CalculatorDatePickerProps> = ({
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          <Input ref={inputRef as React.Ref<HTMLInputElement>} type='text' value={periodString} onChange={onInputChange}
+          <Input ref={inputRef as React.Ref<HTMLInputElement>} type='text' value={value} onChange={onInputChange}
             tabIndex={-1} onClick={e => e.stopPropagation()}
             className='border-none focus-visible:ring-transparent
              focus-visible:ring-offset-0 focus-visible:outline-transparent

@@ -9,12 +9,13 @@ const f = Intl.NumberFormat(
 
 interface SumInputProps {
   setter: Dispatch<SetStateAction<string>>
+  value: string
 }
 
 const SumInput: React.FC<SumInputProps> = ({
   setter,
+  value
 }) => {
-  const [sum, setSum] = useState('')
 
   const sumRef = useRef<HTMLInputElement>()
 
@@ -29,24 +30,22 @@ const SumInput: React.FC<SumInputProps> = ({
       const sumFloat = parseFloat(sum)
 
       if (isNaN(sumFloat)) {
-        setSum(f.format(0))
+        setter(f.format(0))
         return
       }
 
       if (sumFloat > 1500000000)
         return
 
-      setSum(f.format(sumFloat))
+      setter(f.format(sumFloat))
     }
 
     format()
   }
 
-  useEffect(() => setter(sum), [sum, setter])
-
   return (
     <div className='relative flex w-full'>
-      <Input ref={sumRef as Ref<HTMLInputElement>} onChange={onInputChange} value={sum} className='appearance-none m-0 pl-[3.25rem]' placeholder='Укажите сумму' />
+      <Input ref={sumRef as Ref<HTMLInputElement>} onChange={onInputChange} value={value} className='appearance-none m-0 pl-[3.25rem]' placeholder='Укажите сумму' />
       <RussianRuble className='absolute top-2 left-4 w-5 text-neutral-400 ' />
     </div>
   )

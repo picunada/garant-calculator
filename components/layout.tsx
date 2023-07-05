@@ -25,7 +25,7 @@ const Layout: React.FC<LayoutProps> = ({
         }
       }`}</style>
       <div className='h-screen flex flex-col items-center'>
-        <div className='max-w-[1200px]'>
+        <div className='max-w-[1000px]'>
           <Toaster />
           <Navbar />
           <main className={`flex flex-1 flex-col justify-between p-3 md:p-10 ${inter.className}`}>

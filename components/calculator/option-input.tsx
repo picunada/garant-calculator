@@ -31,16 +31,18 @@ export const options = [
 
 interface OptionInputProps {
   setter: Dispatch<SetStateAction<string>>
+  value: string
   law: string
 }
 
 const OptionInput: React.FC<OptionInputProps> = ({
   law,
   setter,
+  value
 }) => {
   return (
     <div>
-      <RadioGroup onValueChange={(value: string) => setter(value)} className='flex flex-row gap-3 flex-wrap'>
+      <RadioGroup onValueChange={(value: string) => setter(value)} value={value} className='flex flex-row gap-3 flex-wrap'>
         {options.find(value => value.law === law)?.options.map((option, index) => {
           return (
             <div key={index} className="flex items-center gap-2 whitespace-nowrap first-letter:uppercase text-neutral-400">

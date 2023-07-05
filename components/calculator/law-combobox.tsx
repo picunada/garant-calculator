@@ -21,6 +21,7 @@ import {
 
 interface LawProps {
   setter: Dispatch<SetStateAction<string>>
+  value: string
 }
 
 const laws = [
@@ -40,9 +41,9 @@ const laws = [
 
 export const LawCombobox: React.FC<LawProps> = ({
   setter,
+  value
 }) => {
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState('')
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,7 +52,7 @@ export const LawCombobox: React.FC<LawProps> = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full md:w-1/3 justify-between"
+          className="min-w-[120px] justify-between"
         >
           {value
             ? laws.find(law => law.value === value)?.label
@@ -69,7 +70,6 @@ export const LawCombobox: React.FC<LawProps> = ({
                 key={law.value}
                 value={law.value}
                 onSelect={(currentValue) => {
-                  setValue(currentValue === value ? '' : currentValue)
                   setter(currentValue === value ? '' : currentValue)
                   setOpen(false)
                 }}
