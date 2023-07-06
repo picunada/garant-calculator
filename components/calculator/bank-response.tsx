@@ -2,7 +2,7 @@ import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { DataTable } from '../ui/data-table'
-import { agentColumns, dealerColumns, loadingColumns } from './column'
+import { dealerColumns, loadingColumns } from './column'
 import type { BankResponse } from '@/lib/bank'
 
 interface BankResponseListProps {
