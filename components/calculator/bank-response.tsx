@@ -21,7 +21,7 @@ function BankResponseList(props: BankResponseListProps) {
               <CardDescription>Описание</CardDescription>
             </CardHeader>
             <CardContent>
-              {props.isLoading ? <DataTable columns={loadingColumns} data={[...Array(5)]} /> : (props.banks && <DataTable columns={dealerColumns} data={props.banks} />)}
+              {props.isLoading ? <DataTable columns={loadingColumns} data={[...Array(5)]} /> : (props.banks && <DataTable columns={dealerColumns} data={props.banks.filter((value) => { return value.price != '-' })} />)}
             </CardContent>
           </Card>
 
