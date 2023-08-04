@@ -61,9 +61,7 @@ export const dealerColumns: ColumnDef<BankResponse>[] = [
       const [law, option, period, advance, sum] = useContext(CalculatorContext)
       return (
         <div className='flex items-center justify-end'>
-          {row.original.price === '-' ?
-            row.original.price :
-            <ApplicationForm bank={row.original} advance={advance ? 'да' : 'нет'} law={law} period={period} sum={sum} type={option} />}
+          <ApplicationForm bank={row.original} advance={advance ? 'да' : 'нет'} law={law} period={period} sum={sum} type={option} />
         </div>
       )
     },
