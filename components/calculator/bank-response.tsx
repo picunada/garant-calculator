@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { DataTable } from '../ui/data-table'
@@ -11,6 +11,11 @@ interface BankResponseListProps {
 }
 
 function BankResponseList(props: BankResponseListProps) {
+
+  useEffect(() => {
+    console.log(props.banks)
+  }, [props.banks])
+
   return (
     <div className='max-w-[1200px] w-full'>
       <Tabs defaultValue="dealer" >
@@ -21,7 +26,7 @@ function BankResponseList(props: BankResponseListProps) {
               <CardDescription>Описание</CardDescription>
             </CardHeader>
             <CardContent>
-              {props.isLoading ? <DataTable columns={loadingColumns} data={[...Array(5)]} /> : (props.banks && <DataTable columns={dealerColumns} data={props.banks.filter((value) => { return value.price != '-' })} />)}
+              {props.isLoading ? <DataTable columns={loadingColumns} data={[...Array(5)]} /> : (Array.isArray(props.banks) && <DataTable columns={dealerColumns} data={props.banks.filter((value) => { return value.price != '-' })} />)}
             </CardContent>
           </Card>
 

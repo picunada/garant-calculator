@@ -20,10 +20,10 @@ interface CalculatorDatePickerProps {
   value: string
 }
 
-const CalculatorDatePicker: React.FC<CalculatorDatePickerProps> = ({
-  setter,
-  value
-}) => {
+const CalculatorDatePicker = React.forwardRef<HTMLButtonElement, CalculatorDatePickerProps>((
+  props,
+  fRef
+) => {
   const [date, setDate] = React.useState<Date>(new Date())
   const inputRef = React.useRef<HTMLInputElement>()
 
@@ -33,13 +33,13 @@ const CalculatorDatePicker: React.FC<CalculatorDatePickerProps> = ({
     const val = `${Math.ceil(days)}`
     const func = async () => {
       if (val === '0')
-        setter('')
+        props.setter('')
       const lastDigit = parseInt(val ?? '0') % 10
       if (lastDigit === 1)
-        setter(`${val} день`)
+        props.setter(`${val} день`)
       else if (lastDigit > 1 && lastDigit < 5 && (parseInt(val!) > 20 || parseInt(val!) < 5))
-        setter(`${val} дня`)
-      else setter(`${val} дней`)
+        props.setter(`${val} дня`)
+      else props.setter(`${val} дней`)
     }
     func()
   }
@@ -51,22 +51,22 @@ const CalculatorDatePicker: React.FC<CalculatorDatePickerProps> = ({
     val = val.replace(/\D/g, '')
     const func = async () => {
       if (val.length === 0)
-        setter('')
+        props.setter('')
 
       const lastDigit = parseInt(val ?? '0') % 10
 
       if (lastDigit === 1)
-        setter(`${val} день`)
+        props.setter(`${val} день`)
       else if (lastDigit > 1 && lastDigit < 5 && (parseInt(val!) > 20 || parseInt(val!) < 5))
-        setter(`${val} дня`)
-      else setter(`${val} дней`)
+        props.setter(`${val} дня`)
+      else props.setter(`${val} дней`)
     }
     func().then(() => e.target.setSelectionRange(start, end))
   }
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <Popover >
+      <PopoverTrigger ref={fRef} asChild>
         <Button
           variant={'outline'}
           className={cn(
@@ -74,7 +74,7 @@ const CalculatorDatePicker: React.FC<CalculatorDatePickerProps> = ({
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          <Input ref={inputRef as React.Ref<HTMLInputElement>} type='text' value={value} onChange={onInputChange}
+          <Input ref={inputRef as React.Ref<HTMLInputElement>} type='text' value={props.value} onChange={onInputChange}
             tabIndex={-1} onClick={e => e.stopPropagation()}
             className='border-none focus-visible:ring-transparent
              focus-visible:ring-offset-0 focus-visible:outline-transparent
@@ -94,6 +94,8 @@ const CalculatorDatePicker: React.FC<CalculatorDatePickerProps> = ({
       </PopoverContent>
     </Popover>
   )
-}
+})
+
+CalculatorDatePicker.displayName = 'Datepicker'
 
 export default CalculatorDatePicker
