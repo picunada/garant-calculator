@@ -1,4 +1,4 @@
-import { createContext, use, useCallback, useEffect, useState } from 'react'
+import { createContext, use, useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import axios from 'axios'
 import useSWRMutation from 'swr/mutation'
@@ -12,6 +12,7 @@ import BankResponseList from './bank-response'
 import { Button } from '@/components/ui/button'
 import type { BankResponse } from '@/lib/bank'
 import CalculatorProvider from '../providers/calculator-provider'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip'
 
 function Calculator() {
   const searchParams = useSearchParams()
@@ -24,6 +25,7 @@ function Calculator() {
   const [procurementNumber, setProcurementNumber] = useState('')
   const [procurementDescription, setProcurementDescription] = useState('')
   const [initFetch, setInitFetch] = useState(false)
+  const [showTooltip, setShowTooltip] = useState(false)
 
   const fetchBankResponse = useCallback(async (url: string, { arg }: {
     arg: {
@@ -52,7 +54,7 @@ function Calculator() {
     isMutating,
   } = useSWRMutation('https://calc.progarantii.ru/v4', fetchBankResponse)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (searchParams.has('law'))
       setLaw(searchParams.get('law') as string)
 
@@ -74,20 +76,27 @@ function Calculator() {
     if (searchParams.has('procurementDescription'))
       setProcurementDescription(searchParams.get('procurementDescription') as string)
 
-    if (searchParams.toString().length > 0)
+    if (searchParams.toString().length > 0) {
+      console.log(searchParams.toString().length)
       setInitFetch(true)
+      setShowTooltip(true)
+    }
 
   }, [searchParams])
 
   useEffect(() => {
-    trigger({
-      k: process.env.NEXT_PUBLIC_API_KEY as string,
-      s: `${sum.replace(/\D/g, '')}руб`,
-      d: period.replace(' ', ''),
-      t: law,
-      a: advance ? 'y' : 'n',
-      m: option,
-    })
+    if (initFetch) {
+      console.log(showTooltip)
+      trigger({
+        k: process.env.NEXT_PUBLIC_API_KEY as string,
+        s: `${sum.replace(/\D/g, '')}руб`,
+        d: period.replace(' ', ''),
+        t: law,
+        a: advance ? 'y' : 'n',
+        m: option,
+      })
+    }
+
   }, [initFetch])
 
   return (
@@ -103,9 +112,22 @@ function Calculator() {
       <div className="max-w-[1200px] w-full flex flex-col rounded-2xl border border-border p-4 gap-4">
         <div className='flex flex-col md:flex-row gap-3 items-center justify-between'>
           <LawCombobox setter={setLaw} value={law} />
-
           <SumInput setter={setSum} value={sum} />
-          <CalculatorDatePicker setter={setPeriod} value={period} />
+
+          <TooltipProvider>
+            <Tooltip open={showTooltip} >
+              <TooltipTrigger onMouseLeave={() => setShowTooltip(false)} asChild>
+                <span className='w-full' tabIndex={0}>
+                  <CalculatorDatePicker setter={setPeriod} value={period} />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className='border-primary'>
+                <p>Введите корректную продолжительность контракта.</p>
+                <p>Не удалось определить автоматически.</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
         </div>
         <div className='flex justify-between md:flex-row gap-3 items-center'>
           <div className='flex flex-row gap-3 items-center'>
@@ -140,4 +162,3 @@ function Calculator() {
 
 export default Calculator
 
-'http://localhost:3000/?law=223&days=30&sum=3300000&type=i&procurementNumber=12341234123&procurementDescription=Обеспечение участия артиста-исполнителя Дениса Мацуева (фортепиано) в концертной программе 29.09.2023 г., проводимой в Государственном бюджетном учреждении культуры города Москвы «Московский международный Дом музыки»'
