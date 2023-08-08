@@ -21,16 +21,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { BankResponse } from '@/lib/bank'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<BankResponse, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
@@ -66,7 +67,7 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length
+          {table.getRowModel().rows?.length > 0
             ? (
               table.getRowModel().rows.map(row => (
                 <TableRow

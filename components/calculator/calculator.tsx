@@ -24,7 +24,7 @@ function Calculator() {
   const [sum, setSum] = useState('')
   const [procurementNumber, setProcurementNumber] = useState('')
   const [procurementDescription, setProcurementDescription] = useState('')
-  const [initFetch, setInitFetch] = useState(false)
+
   const [showTooltip, setShowTooltip] = useState(false)
 
   const fetchBankResponse = useCallback(async (url: string, { arg }: {
@@ -40,10 +40,15 @@ function Calculator() {
     const response = await axios.get<BankResponse[]>('https://calc.progarantii.ru/v4', {
       params: arg,
       headers: {
-        // 'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
       },
     })
+
+    if (Array.isArray(response.data)) {
+      const filteredData = response.data.filter((value) => value.price != '-')
+
+      return filteredData
+    }
 
     return response.data
   }, [searchParams, law, option, period, advance, sum])
@@ -54,7 +59,7 @@ function Calculator() {
     isMutating,
   } = useSWRMutation('https://calc.progarantii.ru/v4', fetchBankResponse)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (searchParams.has('law'))
       setLaw(searchParams.get('law') as string)
 
@@ -78,26 +83,10 @@ function Calculator() {
 
     if (searchParams.toString().length > 0) {
       console.log(searchParams.toString().length)
-      setInitFetch(true)
       setShowTooltip(true)
     }
 
   }, [searchParams])
-
-  useEffect(() => {
-    if (initFetch) {
-      console.log(showTooltip)
-      trigger({
-        k: process.env.NEXT_PUBLIC_API_KEY as string,
-        s: `${sum.replace(/\D/g, '')}руб`,
-        d: period.replace(' ', ''),
-        t: law,
-        a: advance ? 'y' : 'n',
-        m: option,
-      })
-    }
-
-  }, [initFetch])
 
   return (
     <>
